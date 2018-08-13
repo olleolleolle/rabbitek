@@ -1,0 +1,13 @@
+AllCops:
+  Exclude:
+  - 'vendor/**/*'
+  - 'spec/fixtures/**/*'
+  - 'tmp/**/*'
+  TargetRubyVersion: 2.5
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/BlockLength:
+  Exclude:
+  - 'rabbitek.gemspec'
