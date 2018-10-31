@@ -3,7 +3,7 @@ AllCops:
   - 'vendor/**/*'
   - 'spec/fixtures/**/*'
   - 'tmp/**/*'
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.4
 
 Metrics/LineLength:
   Max: 120
@@ -11,3 +11,9 @@ Metrics/LineLength:
 Metrics/BlockLength:
   Exclude:
   - 'rabbitek.gemspec'
+  - 'Rakefile'
+  - '**/*.rake'
+  - 'spec/**/*.rb'
+
+Metrics/MethodLength:
+  Max: 15

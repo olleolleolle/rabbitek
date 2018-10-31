@@ -1,4 +1,13 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'rabbitek'
+require_relative '../lib/rabbitek/cli'
+
+begin
+  Rabbitek::CLI.new.run
+rescue StandardError => e
+  raise(e) if $DEBUG
+  STDERR.puts(e.message)
+  STDERR.puts(e.backtrace.join("\n"))
+  exit(1)
+end
