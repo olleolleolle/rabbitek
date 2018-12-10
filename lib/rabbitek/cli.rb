@@ -36,7 +36,7 @@ module Rabbitek
     private
 
     def start_log # rubocop:disable Metrics/AbcSize
-      info "Rabbit consumers '[#{configuration[:workers].map(&:to_s).join(', ')}]' started with PID #{Process.pid}"
+      info "Rabbit consumers '[#{configuration[:consumers].map(&:to_s).join(', ')}]' started with PID #{Process.pid}"
       info "Client hooks: [#{Rabbitek.config.client_hooks.map(&:class).join(', ')}]"
       info "Server hooks: [#{Rabbitek.config.server_hooks.map(&:class).join(', ')}]"
     end
@@ -66,7 +66,7 @@ module Rabbitek
     end
 
     def map_consumer_workers!
-      configuration[:workers].map!(&:constantize)
+      configuration[:consumers].map!(&:constantize)
     end
 
     def boot_consumers
