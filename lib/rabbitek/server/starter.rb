@@ -17,7 +17,8 @@ module Rabbitek
       setup_bindings!
 
       work_queue.subscribe(manual_ack: true) do |delivery_info, properties, payload|
-        on_message_received(delivery_info, properties, payload)
+        message = Message.new(delivery_info: delivery_info, properties: properties, payload: payload)
+        on_message_received(message)
       end
     end
 
@@ -32,19 +33,19 @@ module Rabbitek
       retry_or_delayed_queue.bind(retry_or_delayed_exchange)
     end
 
-    def on_message_received(delivery_info, properties, payload)
-      consumer = consumer_instance(delivery_info.routing_key)
+    def on_message_received(message)
+      consumer = consumer_instance(message.delivery_info.routing_key)
       consumer.set_context
 
       hook_walker = Utils::HookWalker.new(Rabbitek.config.server_hooks)
 
-      hook_walker.call!(consumer, delivery_info, properties, payload) do |*args|
+      hook_walker.call!(consumer, message) do |*args|
         run_job(*args)
       end
     end
 
-    def run_job(consumer, delivery_info, properties, payload)
-      consumer.perform(consumer.parse_message(payload), delivery_info, properties)
+    def run_job(consumer, message)
+      consumer.perform(message)
     rescue StandardError => e
       error(message: e.inspect, backtrace: e.backtrace, consumer: consumer.class, jid: consumer.jid)
     end

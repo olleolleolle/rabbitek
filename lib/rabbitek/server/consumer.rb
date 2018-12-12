@@ -25,11 +25,11 @@ module Rabbitek
       Rabbitek.logger
     end
 
-    def parse_message(message)
-      Utils::Oj.load(message)
+    def parse_payload(payload)
+      Utils::Oj.load(payload)
     end
 
-    def perform(*_args)
+    def perform(_message)
       raise NotImplementedError
     end
 
@@ -39,6 +39,13 @@ module Rabbitek
 
     def jid
       Thread.current[:rabbit_context][:job_id]
+    end
+
+    def pop_message_manually
+      delivery_info, properties, payload = queue.pop(manual_ack: true)
+      return nil unless payload
+
+      Message.new(delivery_info: delivery_info, properties: properties, payload: payload)
     end
 
     module ClassMethods # rubocop:disable Style/Documentation

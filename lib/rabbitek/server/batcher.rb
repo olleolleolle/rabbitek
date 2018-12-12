@@ -10,9 +10,10 @@ module Rabbitek
       @batch = []
     end
 
-    def perform(payload, delivery_info, properties)
-      add_message_to_batch(payload, delivery_info, properties)
+    def perform(message)
+      collect_batch(message)
       yield(@batch)
+      @consumer.ack!(@batch.last.delivery_info)
     rescue StandardError
       retry_all_messages
       raise
@@ -20,23 +21,18 @@ module Rabbitek
 
     private
 
-    def add_message_to_batch(payload, delivery_info, properties)
-      @batch << { payload: payload, delivery_info: delivery_info, properties: properties }
-      return if @batch.size >= @batch_size # stop collecting batch when maximum batch size has been reached
+    def collect_batch(message)
+      loop do
+        @batch << message
+        break if @batch.size >= @batch_size # stop collecting batch when maximum batch size has been reached
 
-      delivery_info, properties, new_payload = @consumer.queue.pop(manual_ack: true)
-      return unless new_payload # stop collecting batch when there is no more messages waiting
-
-      payload = Utils::Oj.load(new_payload) # as messages in queue are serialized, we need to parse them
-      add_message_to_batch(payload, delivery_info, properties)
+        message = @consumer.pop_message_manually
+        break unless message # stop collecting batch when there are no more messages waiting
+      end
     end
 
     def retry_all_messages
-      @batch.each do |message|
-        Rabbitek::Retryer.call(
-          @consumer, Utils::Oj.dump(message[:payload]), message[:delivery_info], message[:properties]
-        )
-      end
+      @batch.each { |message| Rabbitek::Retryer.call(@consumer, message) }
     end
   end
 end

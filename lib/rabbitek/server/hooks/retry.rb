@@ -8,10 +8,10 @@ module Rabbitek
       ##
       # Hook to retry failed jobs
       class Retry < Rabbitek::ServerHook
-        def call(consumer, delivery_info, properties, payload)
+        def call(consumer, message)
           super
         rescue StandardError
-          Retryer.call(consumer, payload, delivery_info, properties)
+          Retryer.call(consumer, message)
           raise
         end
       end
