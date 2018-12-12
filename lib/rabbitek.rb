@@ -29,7 +29,7 @@ module Rabbitek
   end
 
   def self.logger
-    @logger ||= Logger.new(STDOUT)
+    @config.logger
   end
 
   def self.create_channel
