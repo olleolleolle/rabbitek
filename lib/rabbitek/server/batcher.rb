@@ -4,16 +4,15 @@ module Rabbitek
   ##
   # A service to group messages from queue by batches.
   class Batcher
-    def initialize(consumer, batch_size)
+    def initialize(consumer)
       @consumer = consumer
-      @batch_size = batch_size
+      @batch_size = consumer.batch_size
       @batch = []
     end
 
     def perform(message)
       collect_batch(message)
       yield(@batch)
-      @consumer.ack!(@batch.last.delivery_info)
     rescue StandardError
       retry_all_messages
       raise

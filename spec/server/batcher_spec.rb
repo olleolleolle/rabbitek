@@ -5,8 +5,8 @@ require 'spec_helper'
 describe Rabbitek::Batcher do
   subject(:perform) { batcher.perform(initial_message) {} }
 
-  let(:batcher) { described_class.new(consumer, batch_size) }
-  let(:consumer) { instance_double(Rabbitek::Consumer) }
+  let(:batcher) { described_class.new(consumer) }
+  let(:consumer) { instance_double(Rabbitek::Consumer, batch_size: batch_size) }
   let(:batch_size) { 3 }
 
   let(:initial_message) { message_double('first' => 'payload') }
@@ -21,11 +21,6 @@ describe Rabbitek::Batcher do
   shared_examples_for 'batching' do
     it 'yields batched messages' do
       expect { |b| batcher.perform(*initial_message, &b) }.to yield_with_args(expected_batch)
-    end
-
-    it 'acks the messages' do
-      perform
-      expect(consumer).to have_received(:ack!).with(expected_batch.last.delivery_info)
     end
   end
 

@@ -68,13 +68,25 @@ bundle exec rabbitek
 
 You can schedule jobs e.g.: `ExampleCustomer.perform_async(some: :payload)`
 
+### Batching
+
+```
+  class ExampleConsumer
+    include Rabbitek::Consumer
+
+    rabbit_options config_file: 'config/rabbitek.yml', batch: 1000
+
+    # When batch is defined, the perform method will have batch of up to N messages yielded.
+    def perform(messages)
+    end
+  end
+```
 
 ## Roadmap
 
 * more tests!
 * dead queue
 * CRON jobs
-* job batching (run consumer with e.g. max 100 messages at once)
 * extended docs and how to
 * prometheus metrics
 

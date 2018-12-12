@@ -45,8 +45,12 @@ module Rabbitek
     end
 
     def run_job(consumer, message)
-      consumer.perform(message)
-      consumer.ack!(message.delivery_info)
+      if consumer.class.batch
+        run_job_batched(consumer, message)
+      else
+        consumer.perform(message)
+        consumer.ack!(message.delivery_info)
+      end
     rescue StandardError => e
       error(message: e.inspect, backtrace: e.backtrace, consumer: consumer.class, jid: consumer.jid)
     end
@@ -89,6 +93,13 @@ module Rabbitek
         :fanout,
         Utils::RabbitObjectNames.retry_or_delayed_bind_exchange(opts[:bind_exchange])
       )
+    end
+
+    def run_job_batched(consumer, message)
+      Batcher.new(consumer).perform(message) do |batch|
+        consumer.perform(batch)
+        consumer.ack!(batch.last.delivery_info, true)
+      end
     end
   end
 end
