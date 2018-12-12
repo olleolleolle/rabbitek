@@ -46,6 +46,7 @@ module Rabbitek
 
     def run_job(consumer, message)
       consumer.perform(message)
+      consumer.ack!(message.delivery_info)
     rescue StandardError => e
       error(message: e.inspect, backtrace: e.backtrace, consumer: consumer.class, jid: consumer.jid)
     end

@@ -50,8 +50,12 @@ and create `perform` method same way as on example:
 
     rabbit_options config_file: 'config/rabbitek.yml'
 
-    def perform(payload, delivery_info, properties)
-      ack!(delivery_info)
+    def perform(message)
+      puts "Payload: #{message.payload}"
+      puts "Delivery Info: "#{message.delivery_info}"
+      puts "Properties: "#{message.properties}"
+      
+      # Mesage will be automatically acked unless exception is raised 
     end
   end
 ```
