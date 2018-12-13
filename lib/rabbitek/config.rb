@@ -7,7 +7,8 @@ module Rabbitek
     DEFAULTS = {
       bunny_configuration: { hosts: 'localhost:5672', vhost: '/' },
       log_format: 'json',
-      enable_newrelic: true
+      enable_newrelic: true,
+      logger: Logger.new(STDOUT)
     }.freeze
 
     attr_accessor(*DEFAULTS.keys)

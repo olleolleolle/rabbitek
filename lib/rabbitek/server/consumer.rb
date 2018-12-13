@@ -25,11 +25,11 @@ module Rabbitek
       Rabbitek.logger
     end
 
-    def parse_message(message)
-      Utils::Oj.load(message)
+    def parse_payload(payload)
+      Utils::Oj.load(payload)
     end
 
-    def perform(*_args)
+    def perform(_message)
       raise NotImplementedError
     end
 
@@ -41,11 +41,23 @@ module Rabbitek
       Thread.current[:rabbit_context][:job_id]
     end
 
+    def pop_message_manually
+      delivery_info, properties, payload = queue.pop(manual_ack: true)
+      return nil unless payload
+
+      Message.new(delivery_info: delivery_info, properties: properties, payload: payload)
+    end
+
+    def batch_size
+      self.class.batch
+    end
+
     module ClassMethods # rubocop:disable Style/Documentation
-      attr_accessor :rabbit_options_hash
+      attr_accessor :rabbit_options_hash, :batch
 
       def rabbit_options(opts)
         self.rabbit_options_hash = default_rabbit_options(opts).with_indifferent_access.merge(opts)
+        self.batch = opts[:batch]
       end
 
       def perform_async(payload, opts: {}, channel: nil)

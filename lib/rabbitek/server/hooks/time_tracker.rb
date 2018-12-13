@@ -10,8 +10,8 @@ module Rabbitek
       class TimeTracker < Rabbitek::ServerHook
         include Loggable
 
-        def call(consumer, delivery_info, properties, payload)
-          info(message: 'Starting', consumer: delivery_info.routing_key, jid: consumer.jid)
+        def call(consumer, message)
+          info(message: 'Starting', consumer: message.delivery_info.routing_key, jid: consumer.jid)
 
           start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
@@ -19,7 +19,7 @@ module Rabbitek
         ensure
           info(
             message: 'Finished',
-            consumer: delivery_info.routing_key,
+            consumer: message.delivery_info.routing_key,
             time: Process.clock_gettime(Process::CLOCK_MONOTONIC) - start,
             jid: consumer.jid
           )

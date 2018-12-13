@@ -8,16 +8,16 @@ module Rabbitek
       ##
       # OpenTracing server hook
       class OpenTracing < Rabbitek::ServerHook
-        def call(consumer, delivery_info, properties, payload)
+        def call(consumer, message)
           response = nil
 
-          ::OpenTracing.start_active_span(delivery_info.routing_key, opts(delivery_info, properties)) do |scope|
-            begin
-              response = super
-            rescue StandardError => e
-              Utils::OpenTracing.log_error(scope.span, e)
-              raise
-            end
+          ::OpenTracing.start_active_span(
+            message.delivery_info.routing_key, opts(message.delivery_info, message.properties)
+          ) do |scope|
+            response = super
+          rescue StandardError => e
+            Utils::OpenTracing.log_error(scope.span, e)
+            raise
           end
 
           response

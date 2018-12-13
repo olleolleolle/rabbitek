@@ -12,17 +12,15 @@ module Rabbitek
           result = nil
 
           ::OpenTracing.start_active_span(params[:routing_key], opentracing_options(params)) do |scope|
-            begin
-              params[:headers] ||= {}
-              Utils::OpenTracing.inject!(scope.span, params[:headers])
+            params[:headers] ||= {}
+            Utils::OpenTracing.inject!(scope.span, params[:headers])
 
-              result = super
-            rescue StandardError => e
-              raise unless scope.span
+            result = super
+          rescue StandardError => e
+            raise unless scope.span
 
-              Utils::OpenTracing.log_error(scope.span, e)
-              raise
-            end
+            Utils::OpenTracing.log_error(scope.span, e)
+            raise
           end
 
           result

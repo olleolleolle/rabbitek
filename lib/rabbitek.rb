@@ -8,6 +8,7 @@ require 'opentracing'
 require 'logger'
 
 # active_support
+require 'active_support/core_ext/module/attribute_accessors'
 require 'active_support/core_ext/hash/indifferent_access'
 require 'active_support/core_ext/string/inflections'
 
@@ -28,7 +29,7 @@ module Rabbitek
   end
 
   def self.logger
-    @logger ||= Logger.new(STDOUT)
+    @config.logger
   end
 
   def self.create_channel

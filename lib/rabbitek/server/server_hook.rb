@@ -4,8 +4,8 @@ module Rabbitek
   ##
   # Base server hook class
   class ServerHook
-    def call(consumer, delivery_info, properties, payload)
-      yield(consumer, delivery_info, properties, payload)
+    def call(consumer, message)
+      yield(consumer, message)
     end
   end
 end
