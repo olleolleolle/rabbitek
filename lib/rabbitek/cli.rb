@@ -4,6 +4,8 @@ require 'slop'
 require 'yaml'
 
 require_relative './cli/signal_handlers'
+require_relative './loggable'
+
 require 'rabbitek'
 
 module Rabbitek
