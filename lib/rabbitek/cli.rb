@@ -10,7 +10,7 @@ module Rabbitek
   ##
   # Rabbitek server CLI
   class CLI
-    include Loggable
+    include ::Rabbitek::Loggable
 
     def run
       opts
