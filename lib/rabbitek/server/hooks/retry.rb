@@ -11,7 +11,7 @@ module Rabbitek
         def call(consumer, message)
           super
         rescue StandardError
-          Retryer.call(consumer, message)
+          Retryer.call(consumer, message) unless consumer.batch_size
           raise
         end
       end

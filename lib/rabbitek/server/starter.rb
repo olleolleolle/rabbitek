@@ -42,6 +42,8 @@ module Rabbitek
       hook_walker.call!(consumer, message) do |*args|
         run_job(*args)
       end
+    rescue StandardError => e
+      error(message: e.inspect, backtrace: e.backtrace, consumer: consumer.class, jid: consumer.jid)
     end
 
     def run_job(consumer, message)
@@ -51,8 +53,6 @@ module Rabbitek
         consumer.perform(message)
         consumer.ack!(message.delivery_info)
       end
-    rescue StandardError => e
-      error(message: e.inspect, backtrace: e.backtrace, consumer: consumer.class, jid: consumer.jid)
     end
 
     def consumer_instance(routing_key)
