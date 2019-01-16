@@ -74,7 +74,7 @@ module Rabbitek
       def perform_in(time, payload, opts: {}, channel: nil)
         publisher = Publisher.new(
           Utils::RabbitObjectNames.retry_or_delayed_bind_exchange(rabbit_options_hash[:bind_exchange]),
-          exchange_type: :fanout,
+          exchange_type: :direct,
           channel: channel
         )
         publish_with_publisher(publisher, payload, {

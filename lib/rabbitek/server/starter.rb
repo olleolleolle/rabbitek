@@ -29,8 +29,8 @@ module Rabbitek
     def setup_bindings!
       consumers.each do |worker_class|
         work_queue.bind(work_exchange, routing_key: worker_class.to_s)
+        retry_or_delayed_queue.bind(retry_or_delayed_exchange, routing_key: worker_class.to_s)
       end
-      retry_or_delayed_queue.bind(retry_or_delayed_exchange)
     end
 
     def on_message_received(message)
@@ -90,7 +90,7 @@ module Rabbitek
     def retry_or_delayed_exchange
       @retry_or_delayed_exchange ||= Utils::Common.exchange(
         channel,
-        :fanout,
+        :direct,
         Utils::RabbitObjectNames.retry_or_delayed_bind_exchange(opts[:bind_exchange])
       )
     end
