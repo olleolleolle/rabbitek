@@ -1,3 +1,12 @@
+## v0.3.0
+
+Improvements:
+* Handle AR connections correctly (hook in Rails < 5, reloader implementation in Rails >= 5)
+* Allow to specify Rails app folder to require
+
+New features:
+* Add sentry integration
+
 ## v0.2.0
 
 ### Breaking changes
