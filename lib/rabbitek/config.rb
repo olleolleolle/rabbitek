@@ -8,7 +8,9 @@ module Rabbitek
       bunny_configuration: { hosts: 'localhost:5672', vhost: '/' },
       log_format: 'json',
       enable_newrelic: true,
-      logger: Logger.new(STDOUT)
+      enable_sentry: true,
+      logger: Logger.new(STDOUT),
+      reloader: proc { |&block| block.call }
     }.freeze
 
     attr_accessor(*DEFAULTS.keys)
@@ -20,12 +22,12 @@ module Rabbitek
       @server_hooks_config = []
     end
 
-    def add_client_hook(hook_object)
-      @client_hooks_config << hook_object
+    def add_client_hook(hook_object, position = @client_hooks_config.size)
+      @client_hooks_config.insert(position, hook_object)
     end
 
-    def add_server_hook(hook_object)
-      @server_hooks_config << hook_object
+    def add_server_hook(hook_object, position = @server_hooks_config.size)
+      @server_hooks_config.insert(position, hook_object)
     end
 
     def client_hooks

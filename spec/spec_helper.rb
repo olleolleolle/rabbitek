@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rabbitek'
+require 'pry'
 
 Dir.glob("#{File.dirname(__FILE__)}/support/**/*.rb").each { |file| require file }
 

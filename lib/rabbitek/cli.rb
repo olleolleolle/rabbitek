@@ -46,8 +46,8 @@ module Rabbitek
     def opts
       @opts ||= Slop.parse do |o|
         o.string '-c', '--config', 'config file path. Default: "config/rabbitek.yaml"', default: 'config/rabbitek.yml'
-        o.string '-r', '--require', 'file to require while booting. Default: "config/environment.rb"',
-                 default: 'config/environment.rb'
+        o.string '-r', '--require', 'rails app location or file to require while booting. Default: "."',
+                 default: '.'
         o.on '--version', 'print the version' do
           puts VERSION
           exit
@@ -64,7 +64,12 @@ module Rabbitek
     end
 
     def require_application
-      require File.expand_path(opts[:require])
+      require File.expand_path(opts[:require]) unless File.directory?(opts[:require])
+
+      # Rails application provided
+      require 'rails'
+      require 'rabbitek/rails'
+      require File.expand_path("#{opts[:require]}/config/environment.rb")
     end
 
     def map_consumer_workers!

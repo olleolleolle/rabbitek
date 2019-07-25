@@ -14,8 +14,14 @@ require 'active_support/core_ext/string/inflections'
 
 current_dir = File.dirname(__FILE__)
 
-Dir.glob("#{current_dir}/rabbitek/*.rb").each { |file| require file }
-Dir.glob("#{current_dir}/rabbitek/**/*.rb").each { |file| require file }
+require 'rabbitek/bunny_connection'
+require 'rabbitek/cli'
+require 'rabbitek/config'
+require 'rabbitek/loggable'
+Dir.glob("#{current_dir}/rabbitek/cli/**/*.rb").each { |file| require file }
+Dir.glob("#{current_dir}/rabbitek/client/**/*.rb").each { |file| require file }
+Dir.glob("#{current_dir}/rabbitek/server/**/*.rb").each { |file| require file }
+Dir.glob("#{current_dir}/rabbitek/utils/**/*.rb").each { |file| require file }
 
 ##
 # High performance background job processing using RabbitMQ
@@ -26,6 +32,10 @@ module Rabbitek
 
   def self.configure
     yield(config)
+  end
+
+  def self.reloader
+    config.reloader
   end
 
   def self.logger
