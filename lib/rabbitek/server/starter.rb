@@ -18,7 +18,7 @@ module Rabbitek
 
       work_queue.subscribe(manual_ack: true) do |delivery_info, properties, payload|
         message = Message.new(delivery_info: delivery_info, properties: properties, payload: payload)
-        on_message_received(message)
+        Rabbitek.reloader.call { on_message_received(message) }
       end
     end
 

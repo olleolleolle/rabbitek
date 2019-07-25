@@ -10,6 +10,7 @@ High performance, easy to use background job processing library for Ruby using R
 * Client & Server hooks
 * OpenTracing (http://opentracing.io/) instrumentation
 * NewRelic instrumentation for sending errors
+* Sentry instrumentation for sending errors
 
 ## Installation
 

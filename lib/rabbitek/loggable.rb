@@ -15,6 +15,7 @@ module Rabbitek
     def error(msg)
       log_msg(:error, msg)
       NewRelic::Agent.notice_error(msg) if Rabbitek.config.enable_newrelic && Object.const_defined?('NewRelic')
+      Raven.capture_exception(msg) if Rabbitek.config.enable_sentry && Object.const_defined?('Raven')
       true
     end
 
