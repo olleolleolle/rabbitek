@@ -15,7 +15,7 @@ module Rabbitek
     def error(msg)
       log_msg(:error, msg)
       NewRelic::Agent.notice_error(msg) if Rabbitek.config.enable_newrelic && Object.const_defined?('NewRelic')
-      Raven.capture_exception(msg) if Rabbitek.config.enable_sentry && Object.const_defined?('Raven')
+      raven_capture_error(msg) if Rabbitek.config.enable_sentry && Object.const_defined?('Raven')
       true
     end
 
@@ -45,6 +45,10 @@ module Rabbitek
 
     def class_name(msg)
       msg.is_a?(Hash) && msg[:class_name] ? msg.delete(:class_name) : self.class.name
+    end
+
+    def raven_capture_error(msg)
+      msg.is_a?(Exception) ? Raven.capture_exception(msg) : Raven.capture_message(msg.to_s)
     end
   end
 end
