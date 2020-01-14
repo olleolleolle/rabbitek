@@ -14,9 +14,15 @@ Gem::Specification.new do |spec|
   spec.description   = 'High performance background job processing'
   spec.homepage      = 'http://boostcom.no'
 
+  spec.license = 'MIT'
+
+  spec.metadata['source_code_uri'] = 'https://github.com/Boostcom/rabbitek'
+  spec.metadata['changelog_uri'] = 'https://github.com/Boostcom/rabbitek/blob/master/CHANGELOG.md'
+  spec.metadata['bug_tracker_uri'] = 'https://github.com/Boostcom/rabbitek/issues'
+
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
-  spec.files         = Dir.chdir(File.expand_path(__dir__)) do
+  spec.files = Dir.chdir(File.expand_path(__dir__)) do
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   end
   spec.bindir        = 'exe'
