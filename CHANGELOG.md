@@ -1,3 +1,8 @@
+## v0.3.1
+
+Bugfix:
+* Fix sentry integration while logging messages different than exceptions
+
 ## v0.3.0
 
 Improvements:
