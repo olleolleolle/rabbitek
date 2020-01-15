@@ -22,7 +22,13 @@ module Rabbitek
         def retry_message(consumer, message)
           Retryer.call(consumer, message)
         rescue StandardError => e
-          error(msg: 'Critical error while retrying. Nacking message', error: e.to_s)
+          error(
+            message: 'Critical error while retrying. Nacking and requeueing message',
+            consumer: message.delivery_info.routing_key,
+            jid: consumer.jid,
+            error: e.to_s
+          )
+
           consumer.nack!(message.delivery_info)
         end
       end
