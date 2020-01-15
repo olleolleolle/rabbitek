@@ -1,4 +1,9 @@
-## v0.3.3
+## v0.3.5
+
+Bugfix:
+* Fix OpenTracing support when there is no trace_id incoming with job.
+
+## v0.3.4
 
 Improvements:
 * Logging improvement

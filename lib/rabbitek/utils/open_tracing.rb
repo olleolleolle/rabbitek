@@ -55,7 +55,10 @@ module Rabbitek
         private
 
         def server_references(message_properties)
-          ::OpenTracing::Reference.follows_from(extract(message_properties))
+          ctx = extract(message_properties)
+          return unless ctx
+
+          ::OpenTracing::Reference.follows_from(ctx)
         end
 
         def extract(message_properties)

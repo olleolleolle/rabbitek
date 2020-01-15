@@ -77,7 +77,8 @@ module Rabbitek
     end
 
     def boot_consumers
-      (1..configuration[:threads]).each_with_object([]) do |_, arr|
+      (1..configuration[:threads]).each_with_object([]) do |i, arr|
+        debug "Booting thread ##{i}"
         arr << Starter.new(Rabbitek.bunny_connection, configuration).start
       end
     end
