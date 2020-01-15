@@ -11,6 +11,7 @@ High performance, easy to use background job processing library for Ruby using R
 * OpenTracing (http://opentracing.io/) instrumentation
 * NewRelic instrumentation for sending errors
 * Sentry instrumentation for sending errors
+* Metrics (using [Yabeda](https://github.com/yabeda-rb/yabeda))
 
 ## Installation
 
@@ -89,7 +90,6 @@ You can schedule jobs e.g.: `ExampleCustomer.perform_async(some: :payload)`
 * dead queue
 * CRON jobs
 * extended docs and how to
-* prometheus metrics
 
 
 ## Development
