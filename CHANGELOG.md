@@ -1,3 +1,8 @@
+## v0.3.3
+
+Improvements:
+* Failure in retry hook will result in additional logging and nacking job with requeue: true
+
 ## v0.3.2
 
 ## v0.3.1

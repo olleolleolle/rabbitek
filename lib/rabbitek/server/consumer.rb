@@ -21,6 +21,10 @@ module Rabbitek
       channel.ack(delivery_info.delivery_tag, multiple)
     end
 
+    def nack!(delivery_info, multiple = false, requeue = true)
+      channel.nack(delivery_info.delivery_tag, multiple, requeue)
+    end
+
     def logger
       Rabbitek.logger
     end
