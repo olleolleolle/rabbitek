@@ -6,6 +6,7 @@ require 'bunny'
 require 'oj'
 require 'opentracing'
 require 'logger'
+require 'yabeda'
 
 # active_support
 require 'active_support/core_ext/module/attribute_accessors'
@@ -52,5 +53,17 @@ module Rabbitek
 
   def self.bunny_connection
     @bunny_connection ||= BunnyConnection.initialize_connection
+  end
+end
+
+Yabeda.configure do
+  group :rabbitek do
+    counter   :processed_messages_count, comment: 'Total number of all messages'
+    counter   :errored_messages_count, comment: 'Total number of errored messages'
+    histogram :processed_messages_runtime do
+      comment 'How long it takes to process message'
+      unit :seconds
+      buckets [0.1, 0.5, 1, 5, 10, 30, 60]
+    end
   end
 end

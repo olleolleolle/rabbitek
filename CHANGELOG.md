@@ -1,3 +1,8 @@
+## v0.4.0
+
+Improvements:
+* Add metrics (universal, you can use e.g. prometheus)
+
 ## v0.3.5
 
 Bugfix:

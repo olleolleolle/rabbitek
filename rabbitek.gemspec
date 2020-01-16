@@ -34,6 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'oj', '~> 3.6'
   spec.add_dependency 'opentracing', '~> 0.4'
   spec.add_dependency 'slop', '~> 4.0'
+  spec.add_dependency 'yabeda'
 
   spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'pry'

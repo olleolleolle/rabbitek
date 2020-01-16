@@ -11,18 +11,39 @@ module Rabbitek
         include Loggable
 
         def call(consumer, message)
-          info(message: 'Starting', consumer: message.delivery_info.routing_key, jid: consumer.jid)
+          log_started(consumer, message)
 
-          start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+          start = current_time
 
           super
         ensure
+          total_time = current_time - start
+
+          log_finished(consumer, message, total_time)
+          metrics_measure_time(consumer, total_time)
+        end
+
+        private
+
+        def current_time
+          Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        end
+
+        def log_started(consumer, message)
+          info(message: 'Starting job', consumer: message.delivery_info.routing_key, jid: consumer.jid)
+        end
+
+        def log_finished(consumer, message, total_time)
           info(
-            message: 'Finished',
+            message: 'Finished job',
             consumer: message.delivery_info.routing_key,
-            time: Process.clock_gettime(Process::CLOCK_MONOTONIC) - start,
+            time: total_time,
             jid: consumer.jid
           )
+        end
+
+        def metrics_measure_time(consumer, total_time)
+          Yabeda.rabbitek.processed_messages_runtime.measure({ consumer: consumer.class }, total_time)
         end
       end
     end
