@@ -13,7 +13,7 @@ module Rabbitek
         def call(consumer, message)
           super
         rescue StandardError
-          retry_message(consumer, message) unless consumer.batch_size
+          retry_message(consumer, message) unless consumer.opts[:batch]
           raise
         end
 

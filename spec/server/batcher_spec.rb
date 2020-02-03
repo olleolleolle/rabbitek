@@ -6,7 +6,7 @@ describe Rabbitek::Batcher do
   subject(:perform) { batcher.perform(initial_message) {} }
 
   let(:batcher) { described_class.new(consumer) }
-  let(:consumer) { instance_double(Rabbitek::Consumer, batch_size: batch_size) }
+  let(:consumer) { instance_double(Rabbitek::Consumer, opts: { batch: { of: batch_size } }) }
   let(:batch_size) { 3 }
 
   let(:initial_message) { message_double('first' => 'payload') }

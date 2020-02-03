@@ -6,7 +6,7 @@ module Rabbitek
   class Batcher
     def initialize(consumer)
       @consumer = consumer
-      @batch_size = consumer.batch_size
+      @batch_size = consumer.opts[:batch][:of]
       @batch = []
     end
 

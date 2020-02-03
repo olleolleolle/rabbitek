@@ -52,16 +52,16 @@ module Rabbitek
       Message.new(delivery_info: delivery_info, properties: properties, payload: payload)
     end
 
-    def batch_size
-      self.class.batch
+    def opts
+      self.class.opts
     end
 
     module ClassMethods # rubocop:disable Style/Documentation
-      attr_accessor :rabbit_options_hash, :batch
+      attr_accessor :rabbit_options_hash, :opts
 
       def rabbit_options(opts)
         self.rabbit_options_hash = default_rabbit_options(opts).with_indifferent_access.merge(opts)
-        self.batch = opts[:batch]
+        self.opts = opts
       end
 
       def perform_async(payload, opts: {}, channel: nil)

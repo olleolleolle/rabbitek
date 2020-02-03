@@ -33,7 +33,7 @@ module Rabbitek
     def_delegators :starter, :channel, :work_queue, :retry_or_delayed_queue, :retry_or_delayed_exchange
 
     def run_job(modified_consumer, message)
-      if modified_consumer.class.batch
+      if modified_consumer.opts[:batch]
         run_job_batched(modified_consumer, message)
       else
         modified_consumer.perform(message)
@@ -44,7 +44,7 @@ module Rabbitek
     def run_job_batched(modified_consumer, message)
       Batcher.new(modified_consumer).perform(message) do |batch|
         modified_consumer.perform(batch)
-        modified_consumer.ack!(batch.last.delivery_info, true)
+        modified_consumer.ack!(batch.last.delivery_info, true) unless modified_consumer.opts[:batch][:manual_ack]
       end
     end
 
