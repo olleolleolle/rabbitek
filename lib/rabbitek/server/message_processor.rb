@@ -37,14 +37,14 @@ module Rabbitek
         run_job_batched(modified_consumer, message)
       else
         modified_consumer.perform(message)
-        modified_consumer.ack!(message.delivery_info)
+        modified_consumer.ack!(message.delivery_info) unless modified_consumer.opts[:manual_ack]
       end
     end
 
     def run_job_batched(modified_consumer, message)
       Batcher.new(modified_consumer).perform(message) do |batch|
         modified_consumer.perform(batch)
-        modified_consumer.ack!(batch.last.delivery_info, true) unless modified_consumer.opts[:batch][:manual_ack]
+        modified_consumer.ack!(batch.last.delivery_info, true) unless modified_consumer.opts[:manual_ack]
       end
     end
 
